@@ -5,16 +5,16 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность для учета посещаемости тренировок.
 /// </summary>
-public class AttendanceTraining : Entity<Guid>
+public class AttendancePractice : Entity<Guid>
 {
     /// <summary>
-    /// Уникальный идентификатор тренировки <see cref="Training"/>,
+    /// Уникальный идентификатор тренировки <see cref="Practice"/>,
     /// для которой ведется учет посещаемости.
     /// </summary>
-    public Guid TrainingId { get; init; }
+    public Guid PracticeId { get; init; }
     
     /// <summary>
-    /// Уникальный идентификатор ученика <see cref="Students"/>,
+    /// Уникальный идентификатор ученика <see cref="Student"/>,
     /// учет посещаемости которого ведется.
     /// </summary>
     public Guid StudentId { get; init; }

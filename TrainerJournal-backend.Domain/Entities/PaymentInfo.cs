@@ -3,9 +3,9 @@ using TrainerJournal_backend.Domain.Enums;
 namespace TrainerJournal_backend.Domain.Entities;
 
 /// <summary>
-/// Представляет сущность описания платежа <see cref="Payments"/>.
+/// Представляет сущность описания платежа <see cref="Payment"/>.
 /// </summary>
-public class PaymentsInfo : Entity<Guid>
+public class PaymentInfo : Entity<Guid>
 {
     /// <summary>
     /// Дата совершения платежа.

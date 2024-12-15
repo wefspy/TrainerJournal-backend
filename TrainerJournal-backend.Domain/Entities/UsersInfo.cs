@@ -8,12 +8,12 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class UsersInfo : Entity<Guid>
 {
     /// <summary>
-    /// Логин пользователя <see cref="UsersIdentity"/>, авторизовавшегося в системе
+    /// Логин пользователя <see cref="UserIdentity"/>, авторизовавшегося в системе
     /// </summary>
     public string UserName { get; init; }
     
     /// <summary>
-    /// Уникальный идентификатор имени пользователя <see cref="PeopleNames"/>
+    /// Уникальный идентификатор имени пользователя <see cref="PersonNames"/>
     /// </summary>
     public Guid PersonNameId { get; init; }
     

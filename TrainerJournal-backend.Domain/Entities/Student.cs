@@ -3,10 +3,10 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность ученика, посещающего тренировки.
 /// </summary>
-public class Students : Entity<Guid>
+public class Student : Entity<Guid>
 {
     /// <summary>
-    /// Логин пользователя <see cref="UsersIdentity"/>, авторизовавшегося в системе.
+    /// Логин пользователя <see cref="UserIdentity"/>, авторизовавшегося в системе.
     /// </summary>
     public string UserName { get; init; }
     

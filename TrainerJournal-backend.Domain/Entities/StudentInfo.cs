@@ -3,7 +3,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность описания ученика.
 /// </summary>
-public class StudentsInfo : Entity<Guid>
+public class StudentInfo : Entity<Guid>
 {
     /// <summary>
     /// День рождения

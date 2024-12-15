@@ -3,10 +3,10 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность тренировки
 /// </summary>
-public class Training : Entity<Guid>
+public class Practice : Entity<Guid>
 {
     /// <summary>
-    /// Уникальный идентификатор группы <see cref="Groups"/>,
+    /// Уникальный идентификатор группы <see cref="Group"/>,
     /// к которой относится тренировка
     /// </summary>
     public Guid GroupId { get; init; }
@@ -18,7 +18,7 @@ public class Training : Entity<Guid>
     
     /// <summary>
     /// Стоимость посещения тренировки.
-    /// По умолчанию, назначается текущее значение из закрепленной группы <see cref="Groups"/>
+    /// По умолчанию, назначается текущее значение из закрепленной группы <see cref="Group"/>
     /// </summary>
     public double Cost { get; set; }
 }

@@ -4,7 +4,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// Представляет сущность, хранящую имена людей.
 /// Наследуется от <see cref="Entity{TKey}"/>, где в качестве TKey используется <see cref="Guid"/>.
 /// </summary>
-public class PeopleNames : Entity<Guid>
+public class PersonNames : Entity<Guid>
 {
     /// <summary>
     /// Имя человека.

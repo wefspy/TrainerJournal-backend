@@ -3,10 +3,10 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность тренирующейся группы.
 /// </summary>
-public class Groups : Entity<Guid>
+public class Group : Entity<Guid>
 {
     /// <summary>
-    /// Уникальный идентификатор тренера <see cref="Trainers"/> группы.
+    /// Уникальный идентификатор тренера <see cref="Trainer"/> группы.
     /// </summary>
     public Guid TrainerId { get; init; }
     

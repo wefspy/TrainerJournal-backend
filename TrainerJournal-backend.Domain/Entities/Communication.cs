@@ -3,7 +3,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность для хранения способов связи.
 /// </summary>
-public class CommunicationMethods : Entity<Guid>
+public class Communication : Entity<Guid>
 {
     /// <summary>
     /// Номер телефона для связи.
