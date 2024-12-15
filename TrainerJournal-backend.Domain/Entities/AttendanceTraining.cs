@@ -11,18 +11,16 @@ public class AttendanceTraining : Entity<Guid>
     /// Уникальный идентификатор тренировки <see cref="Training"/>,
     /// для которой ведется учет посещаемости.
     /// </summary>
-    public required Guid TrainingId { get; init; }
-    private Training Training { get; set; }
+    public Guid TrainingId { get; init; }
     
     /// <summary>
     /// Уникальный идентификатор ученика <see cref="Students"/>,
     /// учет посещаемости которого ведется.
     /// </summary>
-    public required Guid StudentId { get; init; }
-    private Students Student { get; set; }
+    public Guid StudentId { get; init; }
     
     /// <summary>
     /// Статус посещения занятия <see cref="AttendanceStatus"/>
     /// </summary>
-    public required AttendanceStatus Status { get; set; }
+    public AttendanceStatus Status { get; set; }
 }

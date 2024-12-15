@@ -10,15 +10,15 @@ public class PaymentsInfo : Entity<Guid>
     /// <summary>
     /// Дата совершения платежа.
     /// </summary>
-    public required DateOnly Date { get; set; }
+    public DateOnly Date { get; set; }
     
     /// <summary>
     /// Сумма, на которую был совершен платеж
     /// </summary>
-    public required double Amount { get; set; }
+    public double Amount { get; set; }
     
     /// <summary>
     /// Текущий статус платежа
     /// </summary>
-    public required PaymentStatus Status { get; set; }
+    public PaymentStatus Status { get; set; }
 }

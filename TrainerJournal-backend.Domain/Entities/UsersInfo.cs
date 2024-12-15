@@ -11,13 +11,11 @@ public class UsersInfo : Entity<Guid>
     /// Логин пользователя <see cref="UsersIdentity"/>, авторизовавшегося в системе
     /// </summary>
     public string UserName { get; init; }
-    private UsersIdentity UserIdentity { get; set; }
     
     /// <summary>
     /// Уникальный идентификатор имени пользователя <see cref="PeopleNames"/>
     /// </summary>
     public Guid PersonNameId { get; init; }
-    private PeopleNames PersonName { get; set; }
     
     /// <summary>
     /// Пол пользователя

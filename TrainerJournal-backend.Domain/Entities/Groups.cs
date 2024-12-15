@@ -9,10 +9,6 @@ public class Groups : Entity<Guid>
     /// Уникальный идентификатор тренера <see cref="Trainers"/> группы.
     /// </summary>
     public Guid TrainerId { get; init; }
-    /// <summary>
-    /// Объект тренера <see cref="Trainers"/>.
-    /// </summary>
-    private Trainers Trainer { get; set; }
     
     /// <summary>
     /// Название группы.

@@ -10,7 +10,6 @@ public class Training : Entity<Guid>
     /// к которой относится тренировка
     /// </summary>
     public Guid GroupId { get; init; }
-    private Groups Group { get; set; }
     
     /// <summary>
     /// Дата и время проведения тренировки.

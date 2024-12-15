@@ -8,8 +8,7 @@ public class Aikidoki : Entity<Guid>
     /// <summary>
     /// Логин пользователя <see cref="UsersIdentity"/>, авторизовавшегося в системе
     /// </summary>
-    public required string UserName { get; init; }
-    private UsersIdentity UserIdentity { get; set; }
+    public string UserName { get; init; }
 
     /// <summary>
     /// Уровень кю (ранг).

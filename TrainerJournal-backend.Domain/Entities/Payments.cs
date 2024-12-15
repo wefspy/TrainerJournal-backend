@@ -9,26 +9,22 @@ public class Payments : Entity<Guid>
     /// Уникальный идентификатор тренера <see cref="Trainers"/>,
     /// которому будет направлен платеж на рассмотрение.
     /// </summary>   
-    public required Guid TrainerId { get; init; }
-    private Trainers Trainer { get; set; }
+    public Guid TrainerId { get; init; }
     
     /// <summary>
     /// Уникальный идентификатор чека <see cref="Receipts"/>,
     /// который подтверждает факт совершения платежа.
     /// </summary>
-    public required Guid ReceiptId { get; init; }
-    private Receipts Receipt { get; set; }
+    public Guid ReceiptId { get; init; }
     
     /// <summary>
     /// Уникальный идентификатор кошелька <see cref="Wallets"/>,
     /// к которому будет привязан платеж
     /// </summary>
-    public required Guid WalletId { get; init; }
-    private Wallets Wallet { get; set; }
+    public Guid WalletId { get; init; }
     
     /// <summary>
     /// Уникальный идентификатор описания совершаемого платежа <see cref="PaymentsInfo"/>
     /// </summary>
-    public required Guid PaymentInfoId { get; init; }
-    private PaymentsInfo PaymentInfo { get; set; }
+    public Guid PaymentInfoId { get; init; }
 }

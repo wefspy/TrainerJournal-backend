@@ -8,18 +8,15 @@ public class Students : Entity<Guid>
     /// <summary>
     /// Логин пользователя <see cref="UsersIdentity"/>, авторизовавшегося в системе.
     /// </summary>
-    public required string UserName { get; init; }
-    private UsersIdentity UserIdentity { get; set; }
+    public string UserName { get; init; }
     
     /// <summary>
     /// Уникальный идентификатор кошелька ученика для оплаты услуг.
     /// </summary>
-    public required Guid WalletId { get; init; }
-    private Wallets Wallet { get; set; }
+    public Guid WalletId { get; init; }
     
     /// <summary>
     /// Уникальный идентификатор 
     /// </summary>
-    public required Guid StudentInfoId { get; init; }
-    private StudentsInfo StudentInfo { get; set; }
+    public Guid StudentInfoId { get; init; }
 }

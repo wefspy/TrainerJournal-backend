@@ -9,7 +9,7 @@ public class PeopleNames : Entity<Guid>
     /// <summary>
     /// Имя человека.
     /// </summary>
-    public required string FirstName { get; set; }
+    public string FirstName { get; set; }
     
     /// <summary>
     /// Фамилия человека.

@@ -8,5 +8,5 @@ public class Receipts : Entity<Guid>
     /// <summary>
     /// Адрес, хранящий файл чека
     /// </summary>
-    public required string Url { get; set; }
+    public string Url { get; set; }
 }
