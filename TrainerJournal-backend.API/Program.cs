@@ -1,4 +1,5 @@
 using TrainerJournal_backend.API;
+using TrainerJournal_backend.Application;
 using TrainerJournal_backend.Application.Options;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 builder.Services.AddCustomCors();
 builder.Services.AddDb(postgresDbConnection);
 builder.Services.AddJwtAuth(jwtOptions);
+
+builder.Services.AddApplicationLayer();
 
 var app = builder.Build();
 
