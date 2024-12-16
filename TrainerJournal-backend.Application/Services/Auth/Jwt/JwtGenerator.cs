@@ -4,16 +4,17 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using TrainerJournal_backend.Application.Dtos;
 using TrainerJournal_backend.Application.Options;
+using TrainerJournal_backend.Domain.Entities;
 
-namespace TrainerJournal_backend.Application.Services;
+namespace TrainerJournal_backend.Application.Services.Jwt;
 
 public class JwtGenerator(IOptions<JwtOptions> options)
 {
     private readonly JwtOptions _jwtOptions = options.Value;
     
-    public string GenerateToken(User user)
+    public string GenerateToken(UserIdentity identity, IEnumerable<string> roles)
     {
-        var claims = CreateClaims(user);
+        var claims = CreateClaims(identity, roles);
         var signingCredentials = CreateSigningCredentials();
         var token = CreateJwtToken(claims, signingCredentials);
 
@@ -42,25 +43,19 @@ public class JwtGenerator(IOptions<JwtOptions> options)
         );
     }
 
-    private static List<Claim> CreateClaims(User user)
+    private static List<Claim> CreateClaims(UserIdentity identity, IEnumerable<string> roles)
     {
-        if (user.UserName == null)
-            throw new ArgumentNullException(nameof(user), "Username cannot be null");
+        if (identity.UserName == null)
+            throw new ArgumentNullException(nameof(identity), "Username cannot be null");
         
         var claims = new List<Claim>
         {
-            new(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.UniqueName, user.UserName),
-            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
-            new(JwtRegisteredClaimNames.Name, user.MiddleName),
-            new(JwtRegisteredClaimNames.Gender, user.Gender.ToString()),
-            new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Prn, user.PhoneNumber),
+            new(JwtRegisteredClaimNames.NameId, identity.Id.ToString()),
+            new(JwtRegisteredClaimNames.UniqueName, identity.UserName),
         };
         
         claims.AddRange(
-            user.Roles.Select(
+            roles.Select(
                 role => new Claim(ClaimTypes.Role, role)
             )
         );
