@@ -21,9 +21,19 @@ public class Practice : Entity<Guid>
     public Group Group { get; private set; }
     
     /// <summary>
-    /// Дата и время проведения тренировки.
+    /// Дата проведения тренировки.
     /// </summary>
-    public DateTime Date { get; set; }
+    public DateOnly Date { get; set; }
+    
+    /// <summary>
+    /// Время начала тренировки
+    /// </summary>
+    public TimeOnly TimeStart { get; init; }
+    
+    /// <summary>
+    /// Время окончания тренировки
+    /// </summary>
+    public TimeOnly TimeEnd { get; init; }
     
     /// <summary>
     /// Стоимость посещения тренировки.
