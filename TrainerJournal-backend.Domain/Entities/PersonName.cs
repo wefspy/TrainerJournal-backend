@@ -3,7 +3,10 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность, хранящую имя человека.
 /// </summary>
-public class PersonName : Entity<Guid>
+public class PersonName(
+    string firstName,
+    string lastName,
+    string middleName) : Entity<Guid>
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
@@ -13,19 +16,19 @@ public class PersonName : Entity<Guid>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
     /// </summary>
     public Contact Contact { get; private set; }
-    
+
     /// <summary>
     /// Имя человека.
     /// </summary>
-    public string FirstName { get; set; }
-    
+    public string FirstName { get; set; } = firstName;
+
     /// <summary>
     /// Фамилия человека.
     /// </summary>
-    public string LastName { get; set; }
-    
+    public string LastName { get; set; } = lastName;
+
     /// <summary>
     /// Отчество человека.
     /// </summary>
-    public string MiddleName { get; set; }
+    public string MiddleName { get; set; } = middleName;
 }
