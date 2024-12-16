@@ -11,3 +11,18 @@ services:
       - "5001:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      
+  trainerjournal.db:
+    container_name: trainerjournal.db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: cLQ8Oc7pJNkCdmI3SFSE
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
