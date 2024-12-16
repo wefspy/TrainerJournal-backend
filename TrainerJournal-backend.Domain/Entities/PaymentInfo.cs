@@ -8,6 +8,11 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class PaymentInfo : Entity<Guid>
 {
     /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public Payment Payment { get; private set; }
+    
+    /// <summary>
     /// Дата совершения платежа.
     /// </summary>
     public DateOnly Date { get; set; }

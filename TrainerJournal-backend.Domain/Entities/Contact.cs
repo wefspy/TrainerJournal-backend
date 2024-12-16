@@ -7,14 +7,27 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Contact : Entity<Guid>
 {
     /// <summary>
-    /// Уникальный идентификатор имени <see cref="PersonNames"/> контакта.
+    /// Ссылка на объекты внешнего ключа <see cref="Entities.Entity.Id"/>
     /// </summary>
-    public Guid PersonNameId { get; init; }
+    public List<StudentContact> StudentContacts { get; private set; }
     
     /// <summary>
-    /// Уникальный идентификатор методов связи <see cref="Communication"/> с контактом.
+    /// Внешний ключ для связи с <see cref="Entities.PersonName"/>.
     /// </summary>
-    public Guid CommunicationMethodsId { get; init; }
+    public Guid PersonNameId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="PersonNameId"/>
+    /// </summary>
+    public PersonName PersonName { get; private set; }
+    
+    /// <summary>
+    /// Внешний ключ для связи с <see cref="Entities.Communication"/>.
+    /// </summary>
+    public Guid CommunicationId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="CommunicationId"/>
+    /// </summary>
+    public Communication Communication { get; private set; }
     
     /// <summary>
     /// Описание кем приходится контакт ученику <see cref="Student"/>.

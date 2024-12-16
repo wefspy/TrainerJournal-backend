@@ -6,9 +6,13 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Aikidoka : Entity<Guid>
 {
     /// <summary>
-    /// Логин пользователя <see cref="UserIdentity"/>, авторизовавшегося в системе
+    /// Внешний ключ для связи с <see cref="Entities.UserIdentity"/>.
     /// </summary>
     public string UserName { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="UserName"/>
+    /// </summary>
+    public UserIdentity UserIdentity { get; private set; }
 
     /// <summary>
     /// Уровень кю (ранг).

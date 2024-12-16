@@ -6,25 +6,41 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Payment : Entity<Guid>
 {
     /// <summary>
-    /// Уникальный идентификатор тренера <see cref="Trainer"/>,
+    /// Внешний ключ для связи с <see cref="Entities.Trainer"/>,
     /// которому будет направлен платеж на рассмотрение.
     /// </summary>   
     public Guid TrainerId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="TrainerId"/>
+    /// </summary>
+    public Trainer Trainer { get; private set; }
     
     /// <summary>
-    /// Уникальный идентификатор чека <see cref="Receipt"/>,
+    /// Внешний ключ для связи с <see cref="Entities.Receipt"/>,
     /// который подтверждает факт совершения платежа.
     /// </summary>
     public Guid ReceiptId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="ReceiptId"/>
+    /// </summary>
+    public Receipt Receipt { get; private set; }
     
     /// <summary>
-    /// Уникальный идентификатор кошелька <see cref="Wallet"/>,
+    /// Внешний ключ для связи с <see cref="Entities.Wallet"/>,
     /// к которому будет привязан платеж
     /// </summary>
     public Guid WalletId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="WalletId"/>
+    /// </summary>
+    public Wallet Wallet { get; private set; }
     
     /// <summary>
-    /// Уникальный идентификатор описания совершаемого платежа <see cref="PaymentInfo"/>
+    /// Внешний ключ для связи с <see cref="Entities.PaymentInfo"/>
     /// </summary>
     public Guid PaymentInfoId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="PaymentInfoId"/>
+    /// </summary>
+    public PaymentInfo PaymentInfo { get; private set; }
 }

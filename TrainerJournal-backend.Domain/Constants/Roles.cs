@@ -5,7 +5,7 @@ namespace TrainerJournal_backend.Domain.Constants;
 /// </summary>
 public static class Roles
 {
-    public static readonly string Teacher = "Teacher";
+    public static readonly string Trainer = "Trainer";
     
     public static readonly string Student = "Student";
 }

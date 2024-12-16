@@ -7,7 +7,21 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Trainer : Entity<Guid>
 {
     /// <summary>
-    /// Логин пользователя <see cref="UserIdentity"/>, авторизовавшегося в системе.
+    /// Ссылка на объекты внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public List<Group> Groups { get; private set; }
+    
+    /// <summary>
+    /// Ссылка на объекты внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public List<Payment> Payments { get; private set; }
+    
+    /// <summary>
+    /// Внешний ключ для связи с <see cref="Entities.UserIdentity"/>
     /// </summary>
     public string UserName { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="UserName"/>
+    /// </summary>
+    public UserIdentity UserIdentity { get; private set; }
 }

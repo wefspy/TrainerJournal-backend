@@ -6,6 +6,11 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class StudentInfo : Entity<Guid>
 {
     /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public Student Student { get; private set; }
+    
+    /// <summary>
     /// День рождения
     /// </summary>
     public DateOnly DateOfBirth { get; set; }

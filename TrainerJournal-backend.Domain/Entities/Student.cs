@@ -6,17 +6,44 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Student : Entity<Guid>
 {
     /// <summary>
-    /// Логин пользователя <see cref="UserIdentity"/>, авторизовавшегося в системе.
+    /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public List<StudentGroup> StudentGroups { get; private set; }
+    
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public List<AttendancePractice> AttendancePractices { get; private set; }
+    
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>
+    /// </summary>
+    public List<StudentContact> StudentContacts { get; private set; }
+    
+    /// <summary>
+    /// Внешний ключ для связи с <see cref="Entities.UserIdentity"/>
     /// </summary>
     public string UserName { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="UserName"/>
+    /// </summary>
+    public UserIdentity UserIdentity { get; private set; }
     
     /// <summary>
-    /// Уникальный идентификатор кошелька ученика для оплаты услуг.
+    /// Внешний ключ для связи с <see cref="Entities.Wallet"/>
     /// </summary>
     public Guid WalletId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="WalletId"/>
+    /// </summary>
+    public Wallet Wallet { get; private set; }
     
     /// <summary>
-    /// Уникальный идентификатор 
+    /// Внешний ключ для связи с <see cref="Entities.StudentInfo"/>
     /// </summary>
     public Guid StudentInfoId { get; init; }
+    /// <summary>
+    /// Ссылка на объект внешнего ключа <see cref="StudentInfoId"/>
+    /// </summary>
+    public StudentInfo StudentInfo { get; private set; }
 }
