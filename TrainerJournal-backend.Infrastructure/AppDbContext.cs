@@ -28,6 +28,11 @@ public class AppDbContext : IdentityDbContext<
     public DbSet<Practice> Practices { get; set; }
     public DbSet<UserInfo> UsersInfo { get; set; }
     public DbSet<Wallet> Wallets { get; set; }
+
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    {
+        Database.EnsureCreated();
+    }
     
     protected override void OnModelCreating(ModelBuilder builder)
     {

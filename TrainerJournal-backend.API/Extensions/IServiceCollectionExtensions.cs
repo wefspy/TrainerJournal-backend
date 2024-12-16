@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -12,11 +13,8 @@ namespace TrainerJournal_backend.API;
 
 public static class IServiceCollectionExtensions
 {
-    public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfigurationSection jwtSection)
+    public static IServiceCollection AddJwtAuth(this IServiceCollection services, JwtOptions jwtOptions)
     {
-        var jwtOptions = new JwtOptions();
-        jwtSection.Bind(jwtOptions);
-
         services.Configure<JwtOptions>(options =>
         {
             options.Audience = jwtOptions.Audience;
@@ -60,21 +58,18 @@ public static class IServiceCollectionExtensions
         return services;
     }
 
-    public static void AddCustomCors(this IServiceCollection services, string[]? origins)
+    public static void AddCustomCors(this IServiceCollection services)
     {
         services.AddCors(options =>
         {
             options.AddPolicy("FrontendPolicy", policy =>
             {
-                if (origins != null)
-                    policy.WithOrigins(origins).AllowAnyHeader().AllowAnyMethod();
-                else
-                    policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
             });
         });
     }
     
-    public static IServiceCollection AddSwaggerWithJwtSecurity(this IServiceCollection services)
+    public static IServiceCollection AddSwaggerGenWithJwtSecurity(this IServiceCollection services)
     {
         services.AddSwaggerGen(options =>
         {
@@ -108,6 +103,16 @@ public static class IServiceCollectionExtensions
             });
         });
         
+        return services;
+    }
+    
+    public static IServiceCollection AddDb(this IServiceCollection services, string connectionString)
+    {
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
+        });
+
         return services;
     }
 }
