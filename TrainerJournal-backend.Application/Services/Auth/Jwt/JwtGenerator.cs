@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TrainerJournal_backend.Application.Dtos;
 using TrainerJournal_backend.Application.Options;
 using TrainerJournal_backend.Domain.Entities;
 
