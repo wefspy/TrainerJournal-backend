@@ -1,6 +1,13 @@
-﻿services:
+﻿version: '3.4'
+
+services:
   trainerjournal-backend.api:
+    container_name: trainerjournal-backend.api
     image: trainerjournal-backend.api
     build:
       context: .
       dockerfile: TrainerJournal-backend.API/Dockerfile
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
