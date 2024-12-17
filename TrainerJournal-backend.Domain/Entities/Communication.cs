@@ -3,7 +3,9 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность для хранения способов связи.
 /// </summary>
-public class Communication : Entity<Guid>
+public class Communication(
+    string PhoneNumber,
+    string Email) : Entity<Guid>
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

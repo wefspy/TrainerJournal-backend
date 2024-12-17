@@ -19,8 +19,8 @@ public class TrainerController(
     }
     
     [HttpPut("info")]
-    public async Task<ActionResult<TrainerInfo>> ChangeInfo(TrainerInfo request)
+    public async Task<ActionResult<TrainerInfo>> ChangeInfo(string userName, TrainerInfo request)
     {
-        return await trainerService.ChangeUserInfo(request);
+        return await trainerService.ChangeUserInfo(userName, request);
     }
 }

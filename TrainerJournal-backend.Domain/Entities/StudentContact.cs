@@ -3,7 +3,9 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность связку между учеником и его контактами
 /// </summary>
-public class StudentContact : Entity<Guid>
+public class StudentContact(
+    Guid studentId,
+    Guid contactId) : Entity<Guid>
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.Student"/>,

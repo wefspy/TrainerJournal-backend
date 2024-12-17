@@ -18,18 +18,18 @@ public class TrainerService(
         var personName = await db.PeopleNames.FindAsync(userInfo.PersonNameId);
         var aikidoka = await db.Aikidoki.FirstOrDefaultAsync(a => a.UserName == userName);
         
-        var trainerInfo = new TrainerInfo(userName, personName.FirstName, personName.LastName, personName.MiddleName,
+        var trainerInfo = new TrainerInfo(personName.FirstName, personName.LastName, personName.MiddleName,
             aikidoka.Kyu, identity.PhoneNumber, identity.Email);
         
         return new OkObjectResult(trainerInfo);
     }
     
-    public async Task<ObjectResult> ChangeUserInfo(TrainerInfo request)
+    public async Task<ObjectResult> ChangeUserInfo(string userName, TrainerInfo request)
     {
-        var identity = await userManager.FindByNameAsync(request.UserName);
-        var userInfo = await db.UsersInfo.FirstOrDefaultAsync(i => i.UserName == request.UserName);
+        var identity = await userManager.FindByNameAsync(userName);
+        var userInfo = await db.UsersInfo.FirstOrDefaultAsync(i => i.UserName == userName);
         var personName = await db.PeopleNames.FindAsync(userInfo.PersonNameId);
-        var aikidoka = await db.Aikidoki.FirstOrDefaultAsync(a => a.UserName == request.UserName);
+        var aikidoka = await db.Aikidoki.FirstOrDefaultAsync(a => a.UserName == userName);
         
         await using var transaction = await db.Database.BeginTransactionAsync();
         
