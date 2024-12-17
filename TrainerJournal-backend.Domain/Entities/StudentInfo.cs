@@ -7,7 +7,7 @@ public class StudentInfo(
     DateOnly dateOfBirth,
     string address,
     int Class,
-    DateOnly beginningTraining) : Entity<Guid>
+    DateOnly beginningTraining) : Entity
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

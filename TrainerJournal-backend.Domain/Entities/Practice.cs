@@ -3,7 +3,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность тренировки
 /// </summary>
-public class Practice : Entity<Guid>
+public class Practice : Entity
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

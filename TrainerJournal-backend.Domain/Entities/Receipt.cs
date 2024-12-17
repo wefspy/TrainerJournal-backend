@@ -3,7 +3,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность чека об оплате
 /// </summary>
-public class Receipt : Entity<Guid>
+public class Receipt : Entity
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

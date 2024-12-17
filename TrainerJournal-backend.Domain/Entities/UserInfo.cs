@@ -8,7 +8,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class UserInfo(
     string userName,
     Guid personNameId,
-    Gender gender) : Entity<Guid>
+    Gender gender) : Entity
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.UserIdentity"/>

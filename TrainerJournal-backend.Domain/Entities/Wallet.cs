@@ -4,7 +4,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// Представляет сущность кошелька
 /// </summary>
 public class Wallet(
-    double balance) : Entity<Guid>
+    double balance) : Entity
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

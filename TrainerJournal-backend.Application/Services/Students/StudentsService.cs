@@ -14,90 +14,87 @@ public class StudentsService(
     UserManager<UserIdentity> userManager)
 {
     public async Task<ObjectResult> CreateStudent(CreateStudentRequest request)
+{
+    var group = await db.Groups.FindAsync(request.GroupId);
+    if (group == null)
     {
-        var group = await db.Groups.FindAsync(request.GroupId);
-        if (group == null)
-        {
-            return new BadRequestObjectResult(new { message = "Группа не найдена" });
-        }
-        
-        var passwordGenerator = new PasswordGenerator();
-        var password = passwordGenerator.Generate(10, 5, 5, false, true);
-        
-        var fullName = request.StudentInfoItemDto.FirstName + request.StudentInfoItemDto.LastName + request.StudentInfoItemDto.MiddleName;
-        var userName = Transliteration.ConvertToTransliteration(fullName);
-        
-        await using var transaction = await db.Database.BeginTransactionAsync();
-        
-        try
-        {
-            var newIdentity = new UserIdentity()
-            {
-                UserName = userName,
-                Email = request.StudentInfoItemDto.Email,
-                PhoneNumber = request.StudentInfoItemDto.PhoneNumber,
-            };
-            await userManager.CreateAsync(newIdentity, password);
-            await userManager.AddToRoleAsync(newIdentity, Roles.Student);
-            
-            var aikidoka = new Aikidoka(userName, request.StudentInfoItemDto.Kyu);
-            await db.Aikidoki.AddRangeAsync(aikidoka);
-
-            var personName = new PersonName(
-                request.StudentInfoItemDto.FirstName, request.StudentInfoItemDto.LastName, request.StudentInfoItemDto.MiddleName);
-            await db.PeopleNames.AddAsync(personName);
-
-            await db.SaveChangesAsync();
-
-            var userInfo = new UserInfo(userName, personName.Id, request.StudentInfoItemDto.Gender);
-            await db.UsersInfo.AddAsync(userInfo);
-
-            var studentInfo = new StudentInfo(request.StudentInfoItemDto.DateOfBirth, request.StudentInfoItemDto.Address, 
-                request.StudentInfoItemDto.Class, DateOnly.FromDateTime(DateTime.UtcNow));
-            await db.StudentsInfo.AddAsync(studentInfo);
-
-            var wallet = new Wallet(0);
-            await db.Wallets.AddAsync(wallet);
-            
-            await db.SaveChangesAsync();
-
-            var student = new Student(userName, wallet.Id, studentInfo.Id);
-            await db.Students.AddAsync(student);
-            
-            await db.SaveChangesAsync();
-
-            foreach (var cDto in request.Contacts)
-            {
-                var communication = new Communication(cDto.PhoneNumber, cDto.Email);
-                await db.Communications.AddAsync(communication);
-                
-                var personNameContact = new PersonName(cDto.FirstName, cDto.LastName, cDto.MiddleName);
-                await db.PeopleNames.AddAsync(personNameContact);
-                
-                await db.SaveChangesAsync();
-
-                var contact = new Contact(personNameContact.Id, communication.Id, cDto.Relation);
-                await db.Contacts.AddAsync(contact);
-                await db.SaveChangesAsync();
-
-                var studentContact = new StudentContact(student.Id, contact.Id);
-                await db.StudentsContacts.AddAsync(studentContact);
-            }
-            
-            var studentGroup = new StudentGroup(request.GroupId, student.Id);
-            await db.StudentsGroups.AddAsync(studentGroup);
-            
-            await db.SaveChangesAsync();
-            await transaction.CommitAsync();
-            
-            return new OkObjectResult(new CreateStudentResponse(userName, password));
-        }
-        catch (Exception ex)
-        {
-            await transaction.RollbackAsync();
-            return new BadRequestObjectResult(new { message = "Ошибка в порядке создании записей" });
-        }
+        return new BadRequestObjectResult(new { message = "Группа не найдена" });
     }
+
+    var passwordGenerator = new PasswordGenerator();
+    var password = passwordGenerator.Generate(10, 5, 5, false, true);
+
+    var fullName = $"{request.StudentInfoItemDto.FirstName}{request.StudentInfoItemDto.LastName}{request.StudentInfoItemDto.MiddleName}";
+    var userName = Transliteration.ConvertToTransliteration(fullName);
+
+    await using var transaction = await db.Database.BeginTransactionAsync();
+
+    try
+    {
+        var newIdentity = new UserIdentity
+        {
+            UserName = userName,
+            Email = request.StudentInfoItemDto.Email,
+            PhoneNumber = request.StudentInfoItemDto.PhoneNumber,
+        };
+        var identityResult = await userManager.CreateAsync(newIdentity, password);
+        if (!identityResult.Succeeded)
+        {
+            return new BadRequestObjectResult(new { message = "Ошибка при создании пользователя", errors = identityResult.Errors });
+        }
+
+        await userManager.AddToRoleAsync(newIdentity, Roles.Student);
+        
+        var aikidoka = new Aikidoka(userName, request.StudentInfoItemDto.Kyu);
+        var personName = new PersonName(
+            request.StudentInfoItemDto.FirstName, 
+            request.StudentInfoItemDto.LastName, 
+            request.StudentInfoItemDto.MiddleName);
+
+        var userInfo = new UserInfo(userName, personName.Id, request.StudentInfoItemDto.Gender);
+        var studentInfo = new StudentInfo(request.StudentInfoItemDto.DateOfBirth, request.StudentInfoItemDto.Address,
+            request.StudentInfoItemDto.Class, DateOnly.FromDateTime(DateTime.UtcNow));
+        var wallet = new Wallet(0);
+
+        var student = new Student(userName, wallet.Id, studentInfo.Id);
+        
+        await db.Aikidoki.AddAsync(aikidoka);
+        await db.PeopleNames.AddAsync(personName);
+        await db.UsersInfo.AddAsync(userInfo);
+        await db.StudentsInfo.AddAsync(studentInfo);
+        await db.Wallets.AddAsync(wallet);
+        await db.Students.AddAsync(student);
+        
+        foreach (var cDto in request.Contacts)
+        {
+            var communication = new Communication(cDto.PhoneNumber, cDto.Email);
+            var personNameContact = new PersonName(cDto.FirstName, cDto.LastName, cDto.MiddleName);
+
+            await db.Communications.AddAsync(communication);
+            await db.PeopleNames.AddAsync(personNameContact);
+
+            var contact = new Contact(personNameContact.Id, communication.Id, cDto.Relation);
+            await db.Contacts.AddAsync(contact);
+
+            var studentContact = new StudentContact(student.Id, contact.Id);
+            await db.StudentsContacts.AddAsync(studentContact);
+        }
+
+        var studentGroup = new StudentGroup(request.GroupId, student.Id);
+        await db.StudentsGroups.AddAsync(studentGroup);
+
+        await db.SaveChangesAsync();
+        await transaction.CommitAsync();
+
+        return new OkObjectResult(new CreateStudentResponse(userName, password));
+    }
+    catch (Exception ex)
+    {
+        await transaction.RollbackAsync();
+        return new BadRequestObjectResult(new { message = "Ошибка при создании записей", error = ex });
+    }
+}
+
 
     public async Task<ObjectResult> GetStudents(string userName)
     {
@@ -107,7 +104,7 @@ public class StudentsService(
 
         if (trainer == null)
         {
-            return new NotFoundObjectResult("Trainer not found");
+            return new NotFoundObjectResult("Тренер не найден");
         }
         
         var studentsGroups = await db.StudentsGroups

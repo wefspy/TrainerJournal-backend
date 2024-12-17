@@ -5,7 +5,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// </summary>
 public class Aikidoka(
     string userName,
-    int kyu) : Entity<Guid>
+    int kyu) : Entity
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.UserIdentity"/>.

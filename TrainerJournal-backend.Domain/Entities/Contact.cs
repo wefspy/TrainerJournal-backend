@@ -7,7 +7,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Contact(
     Guid personNameId,
     Guid communicationId,
-    string relation) : Entity<Guid>
+    string relation) : Entity
 {
     /// <summary>
     /// Ссылка на объекты внешнего ключа <see cref="Entities.Entity.Id"/>

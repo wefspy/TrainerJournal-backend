@@ -6,7 +6,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class PersonName(
     string firstName,
     string lastName,
-    string middleName) : Entity<Guid>
+    string middleName) : Entity
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

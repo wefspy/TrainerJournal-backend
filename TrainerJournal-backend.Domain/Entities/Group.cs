@@ -6,7 +6,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class Group(
     Guid trainerId,
     string name,
-    double costPractice) : Entity<Guid>
+    double costPractice) : Entity
 {
     /// <summary>
     /// Ссылка на объекты внешнего ключа <see cref="Entities.Entity.Id"/>

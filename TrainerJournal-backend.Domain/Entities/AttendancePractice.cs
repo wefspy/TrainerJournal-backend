@@ -5,7 +5,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность для учета посещаемости тренировок.
 /// </summary>
-public class AttendancePractice : Entity<Guid>
+public class AttendancePractice : Entity
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.Practice"/>,

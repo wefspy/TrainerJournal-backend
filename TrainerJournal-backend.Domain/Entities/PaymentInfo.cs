@@ -5,7 +5,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность описания платежа <see cref="Payment"/>.
 /// </summary>
-public class PaymentInfo : Entity<Guid>
+public class PaymentInfo : Entity
 {
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="Entities.Entity.Id"/>

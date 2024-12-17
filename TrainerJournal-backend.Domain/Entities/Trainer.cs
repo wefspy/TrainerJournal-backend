@@ -2,9 +2,8 @@ namespace TrainerJournal_backend.Domain.Entities;
 
 /// <summary>
 /// Представляет сущность тренера в системе.
-/// Наследуется от <see cref="Entity{TKey}"/>, где в качестве TKey используется <see cref="Guid"/>.
 /// </summary>
-public class Trainer(string userName) : Entity<Guid>
+public class Trainer(string userName) : Entity
 {
     /// <summary>
     /// Ссылка на объекты внешнего ключа <see cref="Entities.Entity.Id"/>

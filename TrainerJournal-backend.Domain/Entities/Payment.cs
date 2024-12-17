@@ -3,7 +3,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// <summary>
 /// Представляет сущность платёжа
 /// </summary>
-public class Payment : Entity<Guid>
+public class Payment : Entity
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.Trainer"/>,

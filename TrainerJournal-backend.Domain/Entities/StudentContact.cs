@@ -5,23 +5,23 @@ namespace TrainerJournal_backend.Domain.Entities;
 /// </summary>
 public class StudentContact(
     Guid studentId,
-    Guid contactId) : Entity<Guid>
+    Guid contactId) : Entity
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.Student"/>,
     /// владеющего контактом
     /// </summary>
-    public Guid StudentId { get; init; }
+    public Guid StudentId { get; init; } = studentId;
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="StudentId"/>
     /// </summary>
     public Student Student { get; private set; }
-    
+
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.Contact"/>,
     /// относящегося к ученику.
     /// </summary>
-    public Guid ContactId { get; init; }
+    public Guid ContactId { get; init; } = contactId;
     /// <summary>
     /// Ссылка на объект внешнего ключа <see cref="ContactId"/>
     /// </summary>
