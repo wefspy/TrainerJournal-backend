@@ -1,6 +1,4 @@
-﻿version: '3.4'
-
-services:
+﻿services:
   trainerjournal-backend.api:
     container_name: trainerjournal-backend.api
     image: trainerjournal-backend.api
