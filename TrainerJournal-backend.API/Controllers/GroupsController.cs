@@ -27,13 +27,13 @@ public class GroupsController(
     }
     
     [HttpPut("{groupId}")]
-    public async Task<ActionResult<GroupResponse>> Update(Guid groupId, GroupRequest request)
+    public async Task<ActionResult> Update(Guid groupId, GroupRequest request)
     {
         return await groupsService.ChangeGroup(groupId, request);
     }
     
     [HttpPost("{groupId}")]
-    public async Task<ActionResult<GroupResponse>> AddStudent(Guid groupId, Guid studentId)
+    public async Task<ActionResult> AddStudent(Guid groupId, Guid studentId)
     {
         return await groupsService.AddStudent(groupId, studentId);
     }

@@ -65,7 +65,7 @@ public class GroupsService(
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
             
-            return new OkObjectResult(null);
+            return new OkObjectResult("");
         }
         catch (Exception ex)
         {
@@ -86,7 +86,7 @@ public class GroupsService(
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
             
-            return new OkObjectResult(null);
+            return new OkObjectResult("");
         }
         catch (Exception ex)
         {
