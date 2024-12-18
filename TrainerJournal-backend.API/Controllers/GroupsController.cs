@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TrainerJournal_backend.Application.Services.DTOs;
 using TrainerJournal_backend.Application.Services.Groups;
 using TrainerJournal_backend.Application.Services.Groups.DTOs;
 using TrainerJournal_backend.Domain.Constants;
+using TrainerJournal_backend.Domain.Entities;
 
 namespace TrainerJournal_backend.API.Controllers;
 
@@ -37,7 +39,7 @@ public class GroupsController(
     }
     
     [HttpDelete("{groupId}")]
-    public async Task<ActionResult<GroupResponse>> GetGroups(Guid groupId)
+    public async Task<ActionResult<DeletedEntity>> GetGroups(Guid groupId)
     {
         return await groupsService.DeleteGroup(groupId);
     }

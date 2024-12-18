@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrainerJournal_backend.Application.Services.DTOs;
 using TrainerJournal_backend.Application.Services.Groups.DTOs;
 using TrainerJournal_backend.Domain.Entities;
 using TrainerJournal_backend.Infrastructure;
@@ -101,12 +102,12 @@ public class GroupsService(
         try
         {
             var group = await db.Groups.FindAsync(groupId);
-            db.Groups.Remove(group);
-        
+            var delEntity =  db.Groups.Remove(group).Entity;
+            
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
-        
-            return new OkObjectResult(null);
+            
+            return new OkObjectResult(new DeletedEntity(delEntity));
         }
         catch (Exception ex)
         {
