@@ -21,25 +21,25 @@ public class GroupsController(
     }
     
     [HttpPost]
-    public async Task<ActionResult<GroupResponse>> GetGroups(string userName, GroupRequest request)
+    public async Task<ActionResult<GroupResponse>> Create(string userName, GroupRequest request)
     {
         return await groupsService.CreateGroup(userName, request);
     }
     
     [HttpPut("{groupId}")]
-    public async Task<ActionResult<GroupResponse>> GetGroups(Guid groupId, GroupRequest request)
+    public async Task<ActionResult<GroupResponse>> Update(Guid groupId, GroupRequest request)
     {
         return await groupsService.ChangeGroup(groupId, request);
     }
     
     [HttpPost("{groupId}")]
-    public async Task<ActionResult<GroupResponse>> GetGroups(Guid groupId, Guid studentId)
+    public async Task<ActionResult<GroupResponse>> AddStudent(Guid groupId, Guid studentId)
     {
         return await groupsService.AddStudent(groupId, studentId);
     }
     
     [HttpDelete("{groupId}")]
-    public async Task<ActionResult<DeletedEntity>> GetGroups(Guid groupId)
+    public async Task<ActionResult<DeletedEntity>> Delete(Guid groupId)
     {
         return await groupsService.DeleteGroup(groupId);
     }
