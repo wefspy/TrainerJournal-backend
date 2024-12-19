@@ -119,28 +119,40 @@ public class StudentsService(
             .ThenInclude(ui => ui.PersonName)
             .Include(sg => sg.Student.Wallet)
             .Include(sg => sg.Group)
+            .Include(sg => sg.Student.StudentInfo)
             .ToListAsync();
 
-        var studentsShortInfo = studentsGroups.Select(sg =>
+        var studentsGroupsDTO = studentsGroups.Select(sg =>
         {
             var student = sg.Student;
             var identity = student.UserIdentity;
             var aikidoka = identity.Aikidoka;
-            var personName = identity.UserInfo.PersonName;
+            var userInfo = identity.UserInfo;
+            var personName = userInfo.PersonName;
+            var studentInfo = student.StudentInfo;
             var wallet = student.Wallet;
             var group = sg.Group;
 
-            return new StudentShortInfoItemDTO(
+            var studentInfoDto = new StudentGroupDTO(
                 identity.UserName,
                 personName.FirstName,
                 personName.LastName,
                 personName.MiddleName,
-                group.Name,
+                aikidoka.Kyu,
+                studentInfo.DateOfBirth,
+                studentInfo.Class,
+                studentInfo.Address,
+                identity.PhoneNumber,
+                identity.Email,
+                userInfo.Gender,
                 wallet.Balance,
-                aikidoka.Kyu);
+                group.Name
+            );
+            
+            return studentInfoDto;
         }).ToList();
 
-        return new OkObjectResult(studentsShortInfo);
+        return new OkObjectResult(studentsGroupsDTO);
     }
 
     public async Task<ObjectResult> GetUserInfo(string userName)
