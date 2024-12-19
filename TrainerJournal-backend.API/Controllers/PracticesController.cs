@@ -18,6 +18,7 @@ public class PracticesController(
         return await practicesService.GetByTrainer(userName);
     }
 
+    [Authorize(Roles = $"{Roles.Trainer}, {Roles.Student}")]
     [HttpGet("student/{userName}")]
     public async Task<ActionResult<List<CalendarPracticeDTO>>> GetByStudent(string userName)
     {
