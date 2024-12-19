@@ -6,6 +6,7 @@ using TrainerJournal_backend.Application.Services.Jwt;
 using TrainerJournal_backend.Application.Services.Practices;
 using TrainerJournal_backend.Application.Services.Students;
 using TrainerJournal_backend.Application.Services.Trainers;
+using TrainerJournal_backend.Application.Services.Wallets;
 
 namespace TrainerJournal_backend.Application;
 
@@ -20,6 +21,7 @@ public static class DependencyInjection
         services.AddTransient<GroupsService>();
         services.AddTransient<PracticesService>();
         services.AddTransient<AttendanceService>();
+        services.AddTransient<WalletsService>();
         
         return services;
     }
