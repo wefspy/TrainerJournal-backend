@@ -3,6 +3,6 @@ using Microsoft.AspNetCore.Http;
 namespace TrainerJournal_backend.Application.Services.Payments.DTOs;
 
 public record CreatePaymentDTO(
-    string TrainerUserName,
+    Guid TrainerId,
     double Amount,
     IFormFile File);

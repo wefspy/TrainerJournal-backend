@@ -13,7 +13,7 @@ public class TrainerController(
     TrainerService trainerService) : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<TrainerInfo>> GetByStudentUserName(string userName)
+    public async Task<ActionResult<List<TrainerDTO>>> GetByStudentUserName(string userName)
     {
         return await trainerService.GetByStudentUserName(userName);
     }

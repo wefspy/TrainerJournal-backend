@@ -26,8 +26,8 @@ public class TrainerService(
         var trainerDtos = trainers.Select(t =>
         {
             var trainerName = t.UserIdentity.UserInfo.PersonName;
-            return new TrainerDTO(t.UserIdentity.UserName, trainerName.FirstName, trainerName.LastName, trainerName.MiddleName);
-        });
+            return new TrainerDTO(t.Id, trainerName.FirstName, trainerName.LastName, trainerName.MiddleName);
+        }).ToList();
         
         return new OkObjectResult(trainerDtos);
     }
