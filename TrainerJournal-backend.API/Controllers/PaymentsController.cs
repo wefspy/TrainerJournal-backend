@@ -10,19 +10,19 @@ public class PaymentsController(
     PaymentsService paymentsService) : ControllerBase
 {
     [HttpGet("trainers/{userName}")]
-    public async Task<IActionResult> GetByTrainerUserName(string userName)
+    public async Task<ActionResult<List<PaymentTrainerItemDTO>>> GetByTrainerUserName(string userName)
     {
         return await paymentsService.GetByTrainerUserName(userName);
     }
     
     [HttpGet("students/{userName}")]
-    public async Task<IActionResult> GetByStudentUserName(string userName)
+    public async Task<ActionResult<List<PaymentStudentItemDTO>>> GetByStudentUserName(string userName)
     {
         return await paymentsService.GetByStudentUserName(userName);
     }
     
     [HttpPost]
-    public async Task<IActionResult> Create(string studentUserName, CreatePaymentDTO paymentDTO)
+    public async Task<ActionResult> Create(string studentUserName, CreatePaymentDTO paymentDTO)
     {
         return await paymentsService.Create(studentUserName, paymentDTO);
     }
