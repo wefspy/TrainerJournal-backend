@@ -1,10 +1,15 @@
 using TrainerJournal_backend.API;
+using TrainerJournal_backend.API.Extensions;
 using TrainerJournal_backend.Application;
 using TrainerJournal_backend.Application.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new TimeOnlyJsonConverter());
+    });;
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGenWithJwtSecurity();

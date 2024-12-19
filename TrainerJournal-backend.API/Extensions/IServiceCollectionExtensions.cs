@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TrainerJournal_backend.API.Extensions;
 using TrainerJournal_backend.Application.Options;
 using TrainerJournal_backend.Domain.Entities;
 using TrainerJournal_backend.Infrastructure;
@@ -73,6 +74,9 @@ public static class IServiceCollectionExtensions
     {
         services.AddSwaggerGen(options =>
         {
+            options.SchemaFilter<TimeOnlySchemaFilter>();
+            
+            
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Trainer Journal API", Version = "v1" });
 
             // Configuring Swagger to Send a JWT Token in a Request
