@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using TrainerJournal_backend.Application.Services;
+using TrainerJournal_backend.Application.Services.Attendance;
 using TrainerJournal_backend.Application.Services.Groups;
 using TrainerJournal_backend.Application.Services.Jwt;
 using TrainerJournal_backend.Application.Services.Practices;
@@ -18,6 +19,7 @@ public static class DependencyInjection
         services.AddTransient<StudentsService>();
         services.AddTransient<GroupsService>();
         services.AddTransient<PracticesService>();
+        services.AddTransient<AttendanceService>();
         
         return services;
     }

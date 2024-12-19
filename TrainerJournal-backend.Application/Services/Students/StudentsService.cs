@@ -85,7 +85,7 @@ public class StudentsService(
 
             var studentGroup = new StudentGroup(request.GroupId, student.Id);
             await db.StudentsGroups.AddAsync(studentGroup);
-
+            
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
 
