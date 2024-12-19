@@ -1,6 +1,6 @@
 namespace TrainerJournal_backend.Application.Services.Students.DTOs;
 
-public class StudentShortInfoItemDTO(
+public record StudentShortInfoItemDTO(
     string UserName,
     string FirstName,
     string LastName,
