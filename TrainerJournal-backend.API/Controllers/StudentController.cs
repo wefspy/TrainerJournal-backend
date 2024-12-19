@@ -14,7 +14,7 @@ public class StudentController(
 {
     [HttpGet]
     [Authorize(Roles = Roles.Trainer)]
-    public async Task<ActionResult<List<StudentShortInfoItemDTO>>> GetStudents(string trainerUserName)
+    public async Task<ActionResult<List<StudentGroupDTO>>> GetStudents(string trainerUserName)
     {
         return await studentsService.GetStudents(trainerUserName);
     }
