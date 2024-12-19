@@ -176,7 +176,7 @@ public class StudentsService(
         var userInfo = await db.UsersInfo.FirstOrDefaultAsync(x => x.UserName == userName);
         var personName = await db.PeopleNames.FindAsync(userInfo.PersonNameId);
         var student = await db.Students.FirstOrDefaultAsync(x => x.UserName == userName);
-        var studentInfo = await db.StudentsInfo.FindAsync(student.Id);
+        var studentInfo = await db.StudentsInfo.FindAsync(student.StudentInfoId);
         
         await using var transaction = await db.Database.BeginTransactionAsync();
         
