@@ -3,6 +3,7 @@ using TrainerJournal_backend.Domain.Enums;
 namespace TrainerJournal_backend.Application.Services.Students.DTOs;
 
 public record StudentGroupDTO(
+    Guid StudentId,
     string UserName,
     string FirstName,
     string LastName,
@@ -15,5 +16,10 @@ public record StudentGroupDTO(
     string Email,
     Gender Gender,
     double WalletBalance,
+    List<GroupDTO> Groups
+);
+
+public record GroupDTO(
+    Guid GroupId,
     string GroupName
 );

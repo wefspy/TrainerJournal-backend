@@ -122,18 +122,34 @@ public class StudentsService(
             .Include(sg => sg.Student.StudentInfo)
             .ToListAsync();
 
-        var studentsGroupsDTO = studentsGroups.Select(sg =>
+        // Группировка студентов и их групп
+        var studentsGroupsDictionary = studentsGroups
+            .GroupBy(sg => sg.StudentId)
+            .ToDictionary(
+                g => g.Key,
+                g => new
+                {
+                    Student = g.First().Student, // Информация о студенте
+                    Groups = g.Select(sg => new GroupDTO(sg.GroupId, sg.Group.Name)).Distinct()
+                        .ToList() // Уникальные GroupDTO
+                }
+            );
+
+        var studentsGroupsDTO = studentsGroupsDictionary.Select(kvp =>
         {
-            var student = sg.Student;
+            var student = kvp.Value.Student;
             var identity = student.UserIdentity;
             var aikidoka = identity.Aikidoka;
             var userInfo = identity.UserInfo;
             var personName = userInfo.PersonName;
             var studentInfo = student.StudentInfo;
             var wallet = student.Wallet;
-            var group = sg.Group;
+
+            // Массив уникальных групп в формате GroupDTO
+            var groups = kvp.Value.Groups;
 
             var studentInfoDto = new StudentGroupDTO(
+                student.Id,
                 identity.UserName,
                 personName.FirstName,
                 personName.LastName,
@@ -146,9 +162,9 @@ public class StudentsService(
                 identity.Email,
                 userInfo.Gender,
                 wallet.Balance,
-                group.Name
+                groups // Передаем список GroupDTO
             );
-            
+
             return studentInfoDto;
         }).ToList();
 
