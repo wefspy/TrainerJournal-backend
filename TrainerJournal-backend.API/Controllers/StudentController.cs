@@ -14,15 +14,15 @@ public class StudentController(
 {
     [HttpGet]
     [Authorize(Roles = Roles.Trainer)]
-    public async Task<ActionResult<CreateStudentResponse>> GetStudents(string trainerUserName)
+    public async Task<ActionResult<List<StudentShortInfoItemDTO>>> GetStudents(string trainerUserName)
     {
         return await studentsService.GetStudents(trainerUserName);
     }
     
-    [HttpGet("{studentUserName}")]
-    public async Task<ActionResult<CreateStudentResponse>> GetUserInfo(string studentUserName)
+    [HttpGet("{userName}")]
+    public async Task<ActionResult<StudentInfoItemDTO>> GetUserInfo(string userName)
     {
-        return await studentsService.GetUserInfo(studentUserName);
+        return await studentsService.GetUserInfo(userName);
     }
     
     [HttpPost]
@@ -32,20 +32,20 @@ public class StudentController(
         return await studentsService.CreateStudent(request);
     }
     
-    [HttpPut]
-    public async Task<ActionResult<CreateStudentResponse>> ChangeUserInfo(string userName, StudentInfoItemDTO request)
+    [HttpPut("{userName}")]
+    public async Task<ActionResult<StudentInfoItemDTO>> ChangeUserInfo(string userName, StudentInfoItemDTO request)
     {
         return await studentsService.ChangeStudentInfo(userName, request);
     }
     
-    [HttpGet("contacts/{studentUserName}")]
-    public async Task<ActionResult<CreateStudentResponse>> GetContacts(string studentUserName)
+    [HttpGet("contacts/{userName}")]
+    public async Task<ActionResult<List<ContactDTO>>> GetContacts(string userName)
     {
-        return await studentsService.GetContacts(studentUserName);
+        return await studentsService.GetContacts(userName);
     }
     
     [HttpPut("contacts")]
-    public async Task<ActionResult<CreateStudentResponse>> ChangeContacts(List<ContactDTO> contacts)
+    public async Task<ActionResult<List<ContactDTO>>> ChangeContacts(List<ContactDTO> contacts)
     {
         return await studentsService.ChangeContacts(contacts);
     }
