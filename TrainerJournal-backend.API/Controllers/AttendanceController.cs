@@ -12,13 +12,13 @@ namespace TrainerJournal_backend.API.Controllers;
 public class AttendanceController(
     AttendanceService attendanceService)
 {
-    [HttpGet("practices/{Id}")]
+    [HttpGet("practices/{id}")]
     public async Task<ActionResult<List<AttendanceStudentDTO>>> GeyByPractice(Guid Id)
     {
         return await attendanceService.GetByPractice(Id);
     }
     
-    [HttpGet("groups/{Id}")]
+    [HttpGet("groups/{id}")]
     public async Task<ActionResult<List<AttendanceStudentGroupDTO>>> GetByGroup(Guid Id)
     {
         return await attendanceService.GetByGroup(Id);

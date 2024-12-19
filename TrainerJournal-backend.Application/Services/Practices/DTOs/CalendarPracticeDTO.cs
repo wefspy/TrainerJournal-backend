@@ -5,7 +5,7 @@ public record CalendarPracticeDTO(
     DateOnly date,
     TimeOnly timeStart,
     TimeOnly timeEnd,
-    string groupNamem,
+    string groupName,
     string trainerFirstName,
     string trainerLastName,
     string trainerMiddleName);
