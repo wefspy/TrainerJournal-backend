@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrainerJournal_backend.Application.Services.Payments.DTOs;
@@ -9,6 +10,7 @@ using TrainerJournal_backend.Infrastructure;
 namespace TrainerJournal_backend.Application.Services.Payments;
 
 public class PaymentsService(
+    UserManager<UserIdentity> userManager,
     IWebHostEnvironment environment,
     AppDbContext db)
 {
@@ -54,9 +56,15 @@ public class PaymentsService(
             await db.PaymentsInfo.AddAsync(paymentInfo);
             await db.SaveChangesAsync();
 
+            var trainer = await db.Trainers.FirstOrDefaultAsync(t => t.UserName == request.TrainerUserName);
+            if (trainer == null)
+            {
+                return new BadRequestObjectResult("Trainer not found.");
+            }
+            
             var wallet = student.Wallet;
             var payment = new Payment(
-                request.TrainerId,
+                trainer.Id,
                 receipt.Id,
                 wallet.Id,
                 paymentInfo.Id);
@@ -71,9 +79,8 @@ public class PaymentsService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            return new BadRequestObjectResult(ex.Message);
         }
-
-        return new OkObjectResult(request);
     }
 
     public async Task<ObjectResult> GetByStudentUserName(string userName)
