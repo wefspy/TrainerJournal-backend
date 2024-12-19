@@ -21,6 +21,11 @@ public class AttendanceService(
                 .ThenInclude(g => g.StudentsGroup)
                 .ThenInclude(g => g.Student)
                 .ThenInclude(s => s.UserIdentity)
+                .ThenInclude(s => s.Aikidoka)
+                .Include(p => p.Group)
+                .ThenInclude(g => g.StudentsGroup)
+                .ThenInclude(g => g.Student)
+                .ThenInclude(s => s.UserIdentity)
                 .ThenInclude(i => i.UserInfo)
                 .ThenInclude(i => i.PersonName)
                 .FirstOrDefaultAsync(p => p.Id == practiceId);
@@ -43,12 +48,14 @@ public class AttendanceService(
                 }
             
                 var personName = student.UserIdentity.UserInfo.PersonName;
-
+                var aikidoka = student.UserIdentity.Aikidoka;
+                
                 var attendanceStudent = new AttendanceStudentDTO(
                     attendancePractice.Id,
                     personName.FirstName,
                     personName.LastName,
                     personName.MiddleName,
+                    aikidoka.Kyu,
                     attendancePractice.Status
                 );
             

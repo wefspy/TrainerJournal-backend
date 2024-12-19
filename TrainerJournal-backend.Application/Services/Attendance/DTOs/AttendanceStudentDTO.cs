@@ -5,5 +5,6 @@ public record AttendanceStudentDTO(
     string FirstName,
     string LastName,
     string MiddleName,
+    int Kyu,
     bool Status
 );
