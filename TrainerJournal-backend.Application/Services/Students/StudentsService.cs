@@ -147,10 +147,19 @@ public class StudentsService(
         var userInfo = await db.UsersInfo.FirstOrDefaultAsync(x => x.UserName == userName);
         var personName = await db.PeopleNames.FindAsync(userInfo.PersonNameId);
         var student = await db.Students.FirstOrDefaultAsync(x => x.UserName == userName);
-        var studentInfo = await db.StudentsInfo.FindAsync(student.Id);
+        var studentInfo = await db.StudentsInfo.FindAsync(student.StudentInfoId);
         
-        var studentInfoDto = new StudentInfoItemDTO(personName.FirstName, personName.LastName, personName.MiddleName,
-            studentInfo.DateOfBirth, aikidoka.Kyu, studentInfo.Class, studentInfo.Address, Identity.PhoneNumber, Identity.Email, userInfo.Gender);
+        var studentInfoDto = new StudentInfoItemDTO(
+            personName.FirstName, 
+            personName.LastName, 
+            personName.MiddleName,
+            studentInfo.DateOfBirth, 
+            aikidoka.Kyu, 
+            studentInfo.Class, 
+            studentInfo.Address, 
+            Identity.PhoneNumber, 
+            Identity.Email, 
+            userInfo.Gender);
         
         return new OkObjectResult(studentInfoDto);
     }
