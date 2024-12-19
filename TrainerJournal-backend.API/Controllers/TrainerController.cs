@@ -12,6 +12,12 @@ namespace TrainerJournal_backend.API.Controllers;
 public class TrainerController(
     TrainerService trainerService) : ControllerBase
 {
+    [HttpGet]
+    public async Task<ActionResult<TrainerInfo>> GetByStudentUserName(string userName)
+    {
+        return await trainerService.GetByStudentUserName(userName);
+    }
+    
     [HttpGet("info")]
     public async Task<ActionResult<TrainerInfo>> GetInfo(string userName)
     {

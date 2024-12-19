@@ -11,6 +11,27 @@ public class TrainerService(
     AppDbContext db,
     UserManager<UserIdentity> userManager)
 {
+    public async Task<ObjectResult> GetByStudentUserName(string userName)
+    {
+        var student = await db.Students
+            .Include(s => s.StudentGroups)
+            .ThenInclude(s => s.Group)
+            .ThenInclude(g => g.Trainer)
+            .ThenInclude(t => t.UserIdentity)
+            .ThenInclude(i => i.UserInfo)
+            .ThenInclude(i => i.PersonName)
+            .FirstOrDefaultAsync(s => s.UserName == userName);
+        
+        var trainers = student.StudentGroups.Select(g => g.Group.Trainer).Distinct().ToList();
+        var trainerDtos = trainers.Select(t =>
+        {
+            var trainerName = t.UserIdentity.UserInfo.PersonName;
+            return new TrainerDTO(t.UserIdentity.UserName, trainerName.FirstName, trainerName.LastName, trainerName.MiddleName);
+        });
+        
+        return new OkObjectResult(trainerDtos);
+    }
+    
     public async Task<ObjectResult> GetUserInfo(string userName)
     {
         var identity = await userManager.FindByNameAsync(userName);
