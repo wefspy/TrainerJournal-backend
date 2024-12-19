@@ -6,12 +6,12 @@ namespace TrainerJournal_backend.Domain.Enums;
 public enum Gender
 {
     /// <summary>
-    /// Мужской
-    /// </summary>
-    Male,
-    
-    /// <summary>
     /// Женский
     /// </summary>
     Female,
+
+    /// <summary>
+    /// Мужской
+    /// </summary>
+    Male,
 }
