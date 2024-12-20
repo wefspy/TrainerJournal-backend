@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrainerJournal_backend.Application.Services.Payments.DTOs;
@@ -13,7 +12,7 @@ public class PaymentsService(
     IWebHostEnvironment webHostEnvironment,
     AppDbContext db)
 {
-    public async Task<ObjectResult> Create(string studentUserName, CreatePaymentDTO request, HttpRequest Request)
+    public async Task<ObjectResult> Create(string studentUserName, CreatePaymentDTO request)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();
 
@@ -21,25 +20,20 @@ public class PaymentsService(
         {
             if (request.File == null || request.File.Length == 0)
             {
-                return new BadRequestObjectResult("No file uploaded.");
+                return new BadRequestObjectResult("File is required.");
             }
 
-            var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
-            if (!Directory.Exists(uploadsFolder))
-            {
-                Directory.CreateDirectory(uploadsFolder);
-            }
-
-            var fileName = Path.GetRandomFileName();
-            var filePath = Path.Combine(uploadsFolder, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            var receipt = new Receipt("");
+            
+            var uploadsFolder = Path.Combine(webHostEnvironment.ContentRootPath, "uploads", receipt.Id.ToString());
+            Directory.CreateDirectory(uploadsFolder);
+            var filePath = Path.Combine(uploadsFolder, request.File.FileName);
+            await using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await request.File.CopyToAsync(stream);
             }
 
-            var fileUrl = $"http://localhost:5001/uploads/{fileName}";
-            var receipt = new Receipt(fileUrl);
+            receipt.Url = $"http://localhost:5001/uploads/{receipt.Id}/{request.File.FileName}";
             
             await db.AddAsync(receipt);
             await db.SaveChangesAsync();
