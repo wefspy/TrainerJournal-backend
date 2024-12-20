@@ -32,6 +32,13 @@ public class PracticesController(
         return await practicesService.Create(request);
     }
     
+    [HttpPost("duplicate")]
+    [Authorize(Roles = Roles.Trainer)]
+    public async Task<ActionResult<PracticeDTO>> Duplication(string userName, DuplicationDTO request)
+    {
+        return await practicesService.Duplicate(userName, request);
+    }
+    
     [HttpPut]
     [Authorize(Roles = Roles.Trainer)]
     public async Task<ActionResult<PracticeDTO>> Update(PracticeDTO request)
