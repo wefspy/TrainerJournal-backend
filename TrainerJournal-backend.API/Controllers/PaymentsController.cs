@@ -24,6 +24,6 @@ public class PaymentsController(
     [HttpPost]
     public async Task<ActionResult> Create(string studentUserName, [FromForm] CreatePaymentDTO paymentDTO)
     {
-        return await paymentsService.Create(studentUserName, paymentDTO);
+        return await paymentsService.Create(studentUserName, paymentDTO, Request);
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TrainerJournal_backend.Application.Services.Payments.DTOs;
@@ -9,10 +10,10 @@ using TrainerJournal_backend.Infrastructure;
 namespace TrainerJournal_backend.Application.Services.Payments;
 
 public class PaymentsService(
-    IWebHostEnvironment environment,
+    IWebHostEnvironment webHostEnvironment,
     AppDbContext db)
 {
-    public async Task<ObjectResult> Create(string studentUserName, CreatePaymentDTO request)
+    public async Task<ObjectResult> Create(string studentUserName, CreatePaymentDTO request, HttpRequest Request)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();
 
@@ -20,24 +21,26 @@ public class PaymentsService(
         {
             if (request.File == null || request.File.Length == 0)
             {
-                return new BadRequestObjectResult("File is required.");
+                return new BadRequestObjectResult("No file uploaded.");
             }
 
-            var uploadsFolder = Path.Combine(environment.ContentRootPath, "uploads");
+            var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "uploads");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
-            var uniqueFileName = $"{Guid.NewGuid()}_{request.File.FileName}";
-            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+            var fileName = Path.GetRandomFileName();
+            var filePath = Path.Combine(uploadsFolder, fileName);
 
-            await using (var stream = new FileStream(filePath, FileMode.Create))
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await request.File.CopyToAsync(stream);
             }
 
-            var receipt = new Receipt($"/uploads/{uniqueFileName}");
+            var fileUrl = $"http://localhost:5001/uploads/{fileName}";
+            var receipt = new Receipt(fileUrl);
+            
             await db.AddAsync(receipt);
             await db.SaveChangesAsync();
 

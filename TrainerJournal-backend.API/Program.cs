@@ -1,3 +1,4 @@
+using Microsoft.Extensions.FileProviders;
 using TrainerJournal_backend.API;
 using TrainerJournal_backend.API.Extensions;
 using TrainerJournal_backend.Application;
@@ -35,7 +36,17 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+var uploadsFolder = Path.Combine(app.Environment.ContentRootPath, "uploads");
+if (!Directory.Exists(uploadsFolder))
+{
+    Directory.CreateDirectory(uploadsFolder);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(uploadsFolder),
+    RequestPath = "/uploads"
+});
 app.UseCors("FrontendPolicy");
 
 app.UseAuthentication();
