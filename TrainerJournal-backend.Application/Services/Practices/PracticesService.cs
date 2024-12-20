@@ -166,19 +166,10 @@ public class PracticesService(
             {
                 return new NotFoundObjectResult("Trainer not found");
             }
-            
-            if (request.DateEndCopy < request.DateStartCopy || request.DateEndCPaste < request.DateStartPaste)
+
+            if (request.DateEndCopy < request.DateStartCopy || request.DateEndPaste < request.DateStartPaste)
             {
                 return new BadRequestObjectResult(new { message = "Invalid date ranges" });
-            }
-
-            var daysToCopy = (request.DateEndCopy.Day - request.DateStartCopy.Day) + 1;
-            var daysToPaste = (request.DateEndCPaste.Day - request.DateStartPaste.Day) + 1;
-
-            if (daysToPaste < daysToCopy)
-            {
-                return new BadRequestObjectResult(new
-                    { message = "Paste range must be equal to or larger than the copy range" });
             }
 
             var practicesToCopy = trainer.Groups
@@ -191,30 +182,43 @@ public class PracticesService(
                 return new NotFoundObjectResult("No practices found in the specified copy range");
             }
 
-            int dateOffset = (request.DateStartPaste.Day - request.DateStartCopy.Day);
+            int copyRangeDays = (request.DateEndCopy.Day - request.DateStartCopy.Day) + 1;
+            int pasteRangeDays = (request.DateEndPaste.Day - request.DateStartPaste.Day) + 1;
+
+            if (pasteRangeDays < copyRangeDays)
+            {
+                return new BadRequestObjectResult(new
+                    { message = "Paste range must be equal to or larger than the copy range" });
+            }
+
+            int iterations = (int)Math.Ceiling((double)pasteRangeDays / copyRangeDays);
 
             foreach (var group in trainer.Groups)
             {
                 var groupPractices = practicesToCopy.Where(p => p.GroupId == group.Id).ToList();
 
-                foreach (var practice in groupPractices)
+                for (int i = 0; i < iterations; i++)
                 {
-                    var newDate = practice.Date.AddDays(dateOffset);
-
-                    if (newDate > request.DateEndCPaste)
+                    foreach (var practice in groupPractices)
                     {
-                        continue; // Пропускаем, если дата выходит за пределы диапазона вставки
+                        var newDate = practice.Date
+                            .AddDays(i * copyRangeDays + (request.DateStartPaste.Day - request.DateStartCopy.Day));
+
+                        if (newDate > request.DateEndPaste)
+                        {
+                            break; // Выходим, если дата превышает предел диапазона вставки
+                        }
+
+                        var newPractice = new Practice(
+                            groupId: group.Id,
+                            date: newDate,
+                            timeStart: practice.TimeStart,
+                            timeEnd: practice.TimeEnd,
+                            cost: practice.Cost
+                        );
+
+                        db.Practices.Add(newPractice);
                     }
-
-                    var newPractice = new Practice(
-                        groupId: group.Id,
-                        date: newDate,
-                        timeStart: practice.TimeStart,
-                        timeEnd: practice.TimeEnd,
-                        cost: practice.Cost
-                    );
-
-                    db.Practices.Add(newPractice);
                 }
             }
 

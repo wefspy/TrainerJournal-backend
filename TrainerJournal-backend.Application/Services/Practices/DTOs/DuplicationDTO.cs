@@ -4,5 +4,5 @@ public record DuplicationDTO(
     DateOnly DateStartCopy,
     DateOnly DateEndCopy,
     DateOnly DateStartPaste,
-    DateOnly DateEndCPaste
+    DateOnly DateEndPaste
 );
