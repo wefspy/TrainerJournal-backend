@@ -22,7 +22,7 @@ public class PaymentsController(
     }
     
     [HttpPost]
-    public async Task<ActionResult> Create(string studentUserName, CreatePaymentDTO paymentDTO)
+    public async Task<ActionResult> Create(string studentUserName, [FromForm] CreatePaymentDTO paymentDTO)
     {
         return await paymentsService.Create(studentUserName, paymentDTO);
     }

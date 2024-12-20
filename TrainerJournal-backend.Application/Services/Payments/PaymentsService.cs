@@ -23,7 +23,7 @@ public class PaymentsService(
                 return new BadRequestObjectResult("File is required.");
             }
 
-            var uploadsFolder = Path.Combine(environment.WebRootPath, "uploads");
+            var uploadsFolder = Path.Combine(environment.ContentRootPath, "uploads");
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
@@ -38,13 +38,23 @@ public class PaymentsService(
             }
 
             var receipt = new Receipt($"/uploads/{uniqueFileName}");
-
             await db.AddAsync(receipt);
             await db.SaveChangesAsync();
 
             var student = await db.Students
                 .Include(s => s.Wallet)
                 .FirstOrDefaultAsync(s => s.UserName == studentUserName);
+
+            if (student == null)
+            {
+                return new NotFoundObjectResult("Student not found.");
+            }
+
+            var trainer = await db.Trainers.FirstOrDefaultAsync(t => t.Id == request.TrainerId);
+            if (trainer == null)
+            {
+                return new BadRequestObjectResult("Trainer not found with the specified TrainerId.");
+            }
 
             var paymentInfo = new PaymentInfo(
                 DateOnly.FromDateTime(DateTime.UtcNow),
@@ -56,7 +66,7 @@ public class PaymentsService(
 
             var wallet = student.Wallet;
             var payment = new Payment(
-                request.TrainerId,
+                trainer.Id,
                 receipt.Id,
                 wallet.Id,
                 paymentInfo.Id);
@@ -71,10 +81,10 @@ public class PaymentsService(
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            return new BadRequestObjectResult(new { message = "Ошибка при сохранении файла", error = ex.Message });
         }
-
-        return new OkObjectResult(request);
     }
+
 
     public async Task<ObjectResult> GetByStudentUserName(string userName)
     {
@@ -119,7 +129,7 @@ public class PaymentsService(
 
         return new OkObjectResult(paymentItems);
     }
-    
+
     public async Task<ObjectResult> GetByTrainerUserName(string userName)
     {
         await using var transaction = await db.Database.BeginTransactionAsync();
@@ -143,7 +153,7 @@ public class PaymentsService(
         {
             return new NotFoundObjectResult("User not found.");
         }
-        
+
         var paymentItems = new List<PaymentTrainerItemDTO>();
         var payments = trainer.Payments;
         foreach (var payment in payments)
@@ -163,7 +173,7 @@ public class PaymentsService(
                 receipt.Url);
             paymentItems.Add(paymentItem);
         }
-        
+
         return new OkObjectResult(paymentItems);
     }
 }
