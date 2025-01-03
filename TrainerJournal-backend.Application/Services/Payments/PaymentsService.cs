@@ -107,7 +107,8 @@ public class PaymentsService(
         }
 
         var paymentItems = new List<PaymentStudentItemDTO>();
-        var payments = student.Wallet.Payments;
+        var payments = student.Wallet.Payments
+            .OrderBy(p => p.PaymentInfo.Date);;
         foreach (var payment in payments)
         {
             var info = payment.PaymentInfo;
@@ -154,7 +155,8 @@ public class PaymentsService(
 
         var paymentItems = new List<PaymentTrainerItemDTO>();
         var payments = trainer.Payments
-            .Where(p => p.PaymentInfo.Status == PaymentStatus.UnderConsideration);
+            .Where(p => p.PaymentInfo.Status == PaymentStatus.UnderConsideration)
+            .OrderBy(p => p.PaymentInfo.Date);
         foreach (var payment in payments)
         {
             var info = payment.PaymentInfo;
