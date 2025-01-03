@@ -85,7 +85,7 @@ public class StudentsService(
 
             var studentGroup = new StudentGroup(request.GroupId, student.Id);
             await db.StudentsGroups.AddAsync(studentGroup);
-            
+
             await db.SaveChangesAsync();
             await transaction.CommitAsync();
 
@@ -167,6 +167,167 @@ public class StudentsService(
 
             return studentInfoDto;
         }).ToList();
+
+        return new OkObjectResult(studentsGroupsDTO);
+    }
+
+    public async Task<ObjectResult> GetStudentsByFilters(string userName, FilterStudentsDTO filterStudentsDTO)
+    {
+        var trainer = await db.Trainers
+            .Include(t => t.Groups)
+            .FirstOrDefaultAsync(t => t.UserName == userName);
+
+        if (trainer == null)
+        {
+            return new NotFoundObjectResult("Тренер не найден");
+        }
+
+        var studentsGroups = await db.StudentsGroups
+            .Where(sg => trainer.Groups.Select(g => g.Id).Contains(sg.GroupId))
+            .Include(sg => sg.Student)
+            .ThenInclude(s => s.UserIdentity)
+            .ThenInclude(ui => ui.Aikidoka)
+            .Include(sg => sg.Student.UserIdentity.UserInfo)
+            .ThenInclude(ui => ui.PersonName)
+            .Include(sg => sg.Student.Wallet)
+            .Include(sg => sg.Group)
+            .Include(sg => sg.Student.StudentInfo)
+            .ToListAsync();
+
+        // Группировка студентов и их групп
+        var studentsGroupsDictionary = studentsGroups
+            .GroupBy(sg => sg.StudentId)
+            .ToDictionary(
+                g => g.Key,
+                g => new
+                {
+                    Student = g.First().Student, // Информация о студенте
+                    Groups = g.Select(sg => new GroupDTO(sg.GroupId, sg.Group.Name)).Distinct()
+                        .ToList() // Уникальные GroupDTO
+                }
+            );
+
+        var studentsGroupsDTO = studentsGroupsDictionary.Select(kvp =>
+            {
+                var student = kvp.Value.Student;
+                var identity = student.UserIdentity;
+                var aikidoka = identity.Aikidoka;
+                var userInfo = identity.UserInfo;
+                var personName = userInfo.PersonName;
+                var studentInfo = student.StudentInfo;
+                var wallet = student.Wallet;
+
+                // Массив уникальных групп в формате GroupDTO
+                var groups = kvp.Value.Groups;
+
+                var studentInfoDto = new StudentGroupDTO(
+                    student.Id,
+                    identity.UserName,
+                    personName.FirstName,
+                    personName.LastName,
+                    personName.MiddleName,
+                    aikidoka.Kyu,
+                    studentInfo.DateOfBirth,
+                    studentInfo.Class,
+                    studentInfo.Address,
+                    identity.PhoneNumber,
+                    identity.Email,
+                    userInfo.Gender,
+                    wallet.Balance,
+                    groups // Передаем список GroupDTO
+                );
+                return studentInfoDto;
+            }).Where(s =>
+                filterStudentsDTO.Classes.Contains(s.Class)
+                && s.DateOfBirth >= filterStudentsDTO.StartDateOfBirth
+                && s.DateOfBirth <= filterStudentsDTO.EndDDateOfBirth
+                && filterStudentsDTO.Kyues.Contains(s.Kyu)
+                && filterStudentsDTO.Genders.Contains(s.Gender))
+            .ToList();
+
+        return new OkObjectResult(studentsGroupsDTO);
+    }
+
+    public async Task<ObjectResult> GetStudentsBySearch(string userName, SearchStudentsDTO searchStudentsDTO)
+    {
+        var queryParts = searchStudentsDTO.PatternFullName.Split([' ', ',', '\t'], StringSplitOptions.RemoveEmptyEntries);
+
+        var trainer = await db.Trainers
+            .Include(t => t.Groups)
+            .FirstOrDefaultAsync(t => t.UserName == userName);
+
+        if (trainer == null)
+        {
+            return new NotFoundObjectResult("Тренер не найден");
+        }
+
+        var studentsGroups = await db.StudentsGroups
+            .Where(sg => trainer.Groups.Select(g => g.Id).Contains(sg.GroupId))
+            .Include(sg => sg.Student)
+            .ThenInclude(s => s.UserIdentity)
+            .ThenInclude(ui => ui.Aikidoka)
+            .Include(sg => sg.Student.UserIdentity.UserInfo)
+            .ThenInclude(ui => ui.PersonName)
+            .Include(sg => sg.Student.Wallet)
+            .Include(sg => sg.Group)
+            .Include(sg => sg.Student.StudentInfo)
+            .ToListAsync();
+
+        // Группировка студентов и их групп
+        var studentsGroupsDictionary = studentsGroups
+            .GroupBy(sg => sg.StudentId)
+            .ToDictionary(
+                g => g.Key,
+                g => new
+                {
+                    Student = g.First().Student, // Информация о студенте
+                    Groups = g.Select(sg => new GroupDTO(sg.GroupId, sg.Group.Name)).Distinct()
+                        .ToList() // Уникальные GroupDTO
+                }
+            );
+
+        var studentsGroupsDTO = studentsGroupsDictionary.Select(kvp =>
+        {
+            var student = kvp.Value.Student;
+            var identity = student.UserIdentity;
+            var aikidoka = identity.Aikidoka;
+            var userInfo = identity.UserInfo;
+            var personName = userInfo.PersonName;
+            var studentInfo = student.StudentInfo;
+            var wallet = student.Wallet;
+
+            // Массив уникальных групп в формате GroupDTO
+            var groups = kvp.Value.Groups;
+
+            var studentInfoDto = new StudentGroupDTO(
+                student.Id,
+                identity.UserName,
+                personName.FirstName,
+                personName.LastName,
+                personName.MiddleName,
+                aikidoka.Kyu,
+                studentInfo.DateOfBirth,
+                studentInfo.Class,
+                studentInfo.Address,
+                identity.PhoneNumber,
+                identity.Email,
+                userInfo.Gender,
+                wallet.Balance,
+                groups // Передаем список GroupDTO
+            );
+
+            return studentInfoDto;
+        }).Where(student =>
+        {
+            // Собираем все части имени студента
+            var nameParts = new[] { student.FirstName, student.LastName, student.MiddleName }
+                .Where(part => !string.IsNullOrWhiteSpace(part)) // Исключаем пустые части
+                .Select(part => part.ToLower()); // Приводим к нижнему регистру
+
+            // Проверяем, содержатся ли все части запроса в имени студента
+            return queryParts.All(part => nameParts.Contains(part.ToLower()));
+        }).ToList();
+
 
         return new OkObjectResult(studentsGroupsDTO);
     }

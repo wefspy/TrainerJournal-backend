@@ -19,6 +19,20 @@ public class StudentController(
         return await studentsService.GetStudents(trainerUserName);
     }
     
+    [HttpPut("filter")]
+    [Authorize(Roles = Roles.Trainer)]
+    public async Task<ActionResult<List<StudentGroupDTO>>> GetStudentsByFilters(string trainerUserName, FilterStudentsDTO filters)
+    {
+        return await studentsService.GetStudentsByFilters(trainerUserName, filters);
+    }
+    
+    [HttpPut("search")]
+    [Authorize(Roles = Roles.Trainer)]
+    public async Task<ActionResult<List<StudentGroupDTO>>> GetStudentsBySearch(string trainerUserName, SearchStudentsDTO search)
+    {
+        return await studentsService.GetStudentsBySearch(trainerUserName, search);
+    }
+    
     [HttpGet("{userName}")]
     public async Task<ActionResult<StudentInfoItemDTO>> GetUserInfo(string userName)
     {

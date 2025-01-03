@@ -214,7 +214,7 @@ public class PracticesService(
                             date: newDate,
                             timeStart: practice.TimeStart,
                             timeEnd: practice.TimeEnd,
-                            cost: practice.Cost
+                            cost: group.CostPractice
                         );
 
                         db.Practices.Add(newPractice);
