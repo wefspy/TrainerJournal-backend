@@ -8,7 +8,7 @@ namespace TrainerJournal_backend.Domain.Entities;
 public class AttendancePractice(
     Guid practiceId,
     Guid studentId,
-    bool status) : Entity
+    bool isAttend) : Entity
 {
     /// <summary>
     /// Внешний ключ для связи с <see cref="Entities.Practice"/>,
@@ -33,5 +33,5 @@ public class AttendancePractice(
     /// <summary>
     /// Статус посещения занятия <see cref="AttendanceStatus"/>
     /// </summary>
-    public bool Status { get; set; } = status;
+    public bool IsAttend { get; set; } = isAttend;
 }

@@ -56,7 +56,7 @@ public class AttendanceService(
                     personName.LastName,
                     personName.MiddleName,
                     aikidoka.Kyu,
-                    attendancePractice.Status
+                    attendancePractice.IsAttend
                 );
             
                 attendanceStudents.Add(attendanceStudent);
@@ -114,7 +114,7 @@ public class AttendanceService(
                         var attendancePracticesDTO = new AttendanceSchedulePracticeDTO(
                             attendancePractice.Id, 
                             practice.Date, 
-                            attendancePractice.Status);
+                            attendancePractice.IsAttend);
                         
                         attendancePracticesDTOs.Add(attendancePracticesDTO);
                     }
@@ -155,10 +155,13 @@ public class AttendanceService(
             
             var attendances = await db.AttendancePractices
                 .Where(a => attendanceIds.Contains(a.Id))
+                .Include(a => a.Student)
+                .ThenInclude(s => s.Wallet)
+                .Include(a => a.Practice)
                 .ToListAsync();
             
             var missingIds = attendanceIds.Except(attendances.Select(a => a.Id)).ToList();
-            if (missingIds.Any())
+            if (missingIds.Count != 0)
             {
                 return new NotFoundObjectResult(new
                 {
@@ -170,7 +173,20 @@ public class AttendanceService(
             foreach (var attendance in attendances)
             {
                 var dto = attendanceDtos.First(a => a.Id == attendance.Id);
-                attendance.Status = dto.Status;
+
+                if (dto.IsAttend != attendance.IsAttend)
+                {
+                    if (dto.IsAttend)
+                    {
+                        attendance.Student.Wallet.Balance -= attendance.Practice.Cost;
+                    }
+                    else
+                    {
+                        attendance.Student.Wallet.Balance += attendance.Practice.Cost;
+                    }
+                        
+                    attendance.IsAttend = dto.IsAttend;
+                }
             }
             
             await db.SaveChangesAsync();

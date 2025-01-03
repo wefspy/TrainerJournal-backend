@@ -173,4 +173,70 @@ public class PaymentsService(
 
         return new OkObjectResult(paymentItems);
     }
+
+    public async Task<ObjectResult> Update(Guid paymentId, UpdatePaymentDTO updatePaymentDto)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var payment = await db.Payments
+                .Include(p => p.PaymentInfo)
+                .Include(p => p.Wallet)
+                .FirstOrDefaultAsync(p => p.Id == paymentId);
+            if (payment == null)
+            {
+                return new BadRequestObjectResult("Платеж не существует");
+            }
+
+            if (payment.PaymentInfo.Status == updatePaymentDto.Status)
+            {
+                return new BadRequestObjectResult("Указанный статус уже установлен");
+            }
+            
+            if (updatePaymentDto.Status == PaymentStatus.Approved)
+            {
+                payment.Wallet.Balance += payment.PaymentInfo.Amount;
+            }
+            else
+            {
+                payment.Wallet.Balance -= payment.PaymentInfo.Amount;
+            }
+                
+            payment.PaymentInfo.Status = updatePaymentDto.Status;
+            
+            return new OkObjectResult(new { message = "Баланс обновлен" });
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return new BadRequestObjectResult(new { message = "Ошибка при обновлении записи" });
+        }
+    }
+
+    public async Task<ObjectResult> Delete(Guid paymentId)
+    {
+        await using var transaction = await db.Database.BeginTransactionAsync();
+
+        try
+        {
+            var payment = await db.Payments.FindAsync(paymentId);
+            if (payment == null)
+            {
+                return new BadRequestObjectResult("Платеж не существует");
+            }
+
+            var delEntity = db.Payments.Remove(payment).Entity;
+
+            await db.SaveChangesAsync();
+            await transaction.CommitAsync();
+
+            return new OkObjectResult(delEntity.Id);
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return new BadRequestObjectResult(new { message = "Ошибка при удалении записи" });
+        }
+    }
 }
