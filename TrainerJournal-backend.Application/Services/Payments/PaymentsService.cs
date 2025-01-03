@@ -114,6 +114,7 @@ public class PaymentsService(
             var receipt = payment.Receipt;
             var personName = payment.Trainer.UserIdentity.UserInfo.PersonName;
             var paymentItem = new PaymentStudentItemDTO(
+                payment.Id,
                 info.Date,
                 personName.FirstName,
                 personName.LastName,
@@ -161,6 +162,7 @@ public class PaymentsService(
             var groupsNames = payment.Wallet.Student.StudentGroups.Select(g => g.Group.Name).ToList();
 
             var paymentItem = new PaymentTrainerItemDTO(
+                payment.Id,
                 studentPersonName.FirstName,
                 studentPersonName.LastName,
                 studentPersonName.MiddleName,
@@ -198,12 +200,15 @@ public class PaymentsService(
             {
                 payment.Wallet.Balance += payment.PaymentInfo.Amount;
             }
-            else
+            else if (payment.PaymentInfo.Status == PaymentStatus.Approved && updatePaymentDto.Status == PaymentStatus.Rejected)
             {
                 payment.Wallet.Balance -= payment.PaymentInfo.Amount;
             }
                 
             payment.PaymentInfo.Status = updatePaymentDto.Status;
+            
+            await db.SaveChangesAsync();
+            await transaction.CommitAsync();
             
             return new OkObjectResult(new { message = "Баланс обновлен" });
         }
