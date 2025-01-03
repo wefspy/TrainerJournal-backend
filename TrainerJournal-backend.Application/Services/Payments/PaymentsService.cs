@@ -153,7 +153,8 @@ public class PaymentsService(
         }
 
         var paymentItems = new List<PaymentTrainerItemDTO>();
-        var payments = trainer.Payments;
+        var payments = trainer.Payments
+            .Where(p => p.PaymentInfo.Status == PaymentStatus.UnderConsideration);
         foreach (var payment in payments)
         {
             var info = payment.PaymentInfo;
