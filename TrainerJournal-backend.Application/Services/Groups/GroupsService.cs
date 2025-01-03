@@ -20,6 +20,19 @@ public class GroupsService(
         
         return new OkObjectResult(groups);
     }
+    
+    public async Task<ObjectResult> GetGroupsBySearch(string userName, GroupSearchDTO search)
+    {
+        var groups = await db.Groups
+            .Where(g => g.Trainer.UserName == userName)
+            .Include(x => x.StudentsGroup)
+            .Select(x => new GroupResponse(x.Id, x.Name, x.CostPractice, x.StudentsGroup.Count))
+            .ToListAsync();
+
+        groups = groups.Where(g => g.name.Contains(search.PatternSearch)).ToList();
+        
+        return new OkObjectResult(groups);
+    }
 
     public async Task<ObjectResult> CreateGroup(string userName, GroupRequest request)
     {

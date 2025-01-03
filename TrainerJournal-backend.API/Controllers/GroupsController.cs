@@ -20,6 +20,12 @@ public class GroupsController(
         return await groupsService.GetGroups(userName);
     }
     
+    [HttpPut("search")]
+    public async Task<ActionResult<List<GroupResponse>>> GetGroupsBySearch(string userName, GroupSearchDTO search)
+    {
+        return await groupsService.GetGroupsBySearch(userName, search);
+    }
+    
     [HttpPost]
     public async Task<ActionResult<GroupResponse>> Create(string userName, GroupRequest request)
     {
