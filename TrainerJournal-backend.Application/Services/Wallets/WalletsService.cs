@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TrainerJournal_backend.Application.Services.Wallets.DTOs;
 using TrainerJournal_backend.Domain.Entities;
 using TrainerJournal_backend.Infrastructure;
 
@@ -20,7 +21,7 @@ public class WalletsService(
         }
 
         var wallet = student.Wallet;
-        var walletDto = new Wallet(wallet.Balance);
+        var walletDto = new WalletDTO(wallet.Balance);
         
         return new ObjectResult(walletDto);
     }
