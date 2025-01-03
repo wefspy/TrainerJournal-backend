@@ -171,7 +171,7 @@ public class StudentsService(
         return new OkObjectResult(studentsGroupsDTO);
     }
 
-    public async Task<ObjectResult> GetStudentsByFilters(string userName, FilterStudentsDTO filterStudentsDTO)
+    public async Task<ObjectResult> GetStudentsByFilters(string userName, FilterStudentsDTO filter)
     {
         var trainer = await db.Trainers
             .Include(t => t.Groups)
@@ -238,11 +238,12 @@ public class StudentsService(
                 );
                 return studentInfoDto;
             }).Where(s =>
-                filterStudentsDTO.Classes.Contains(s.Class)
-                && s.DateOfBirth >= filterStudentsDTO.StartDateOfBirth
-                && s.DateOfBirth <= filterStudentsDTO.EndDateOfBirth
-                && filterStudentsDTO.Kyues.Contains(s.Kyu)
-                && filterStudentsDTO.Genders.Contains(s.Gender))
+                filter.Classes.Contains(s.Class)
+                && s.DateOfBirth >= filter.StartDateOfBirth
+                && s.DateOfBirth <= filter.EndDateOfBirth
+                && filter.Kyues.Contains(s.Kyu)
+                && filter.Genders.Contains(s.Gender)
+                && s.Groups.Any(group => filter.GroupsIds.Contains(group.GroupId)))
             .ToList();
 
         return new OkObjectResult(studentsGroupsDTO);

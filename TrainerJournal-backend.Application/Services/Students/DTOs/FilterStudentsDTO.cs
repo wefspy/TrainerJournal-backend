@@ -7,4 +7,5 @@ public record FilterStudentsDTO(
     DateOnly StartDateOfBirth,
     DateOnly EndDateOfBirth,
     HashSet<int> Kyues,
-    HashSet<Gender> Genders);
+    HashSet<Gender> Genders,
+    HashSet<Guid> GroupsIds);
