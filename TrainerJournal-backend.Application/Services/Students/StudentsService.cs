@@ -240,7 +240,7 @@ public class StudentsService(
             }).Where(s =>
                 filterStudentsDTO.Classes.Contains(s.Class)
                 && s.DateOfBirth >= filterStudentsDTO.StartDateOfBirth
-                && s.DateOfBirth <= filterStudentsDTO.EndDDateOfBirth
+                && s.DateOfBirth <= filterStudentsDTO.EndDateOfBirth
                 && filterStudentsDTO.Kyues.Contains(s.Kyu)
                 && filterStudentsDTO.Genders.Contains(s.Gender))
             .ToList();
@@ -319,13 +319,14 @@ public class StudentsService(
             return studentInfoDto;
         }).Where(student =>
         {
-            // Собираем все части имени студента
-            var nameParts = new[] { student.FirstName, student.LastName, student.MiddleName }
-                .Where(part => !string.IsNullOrWhiteSpace(part)) // Исключаем пустые части
-                .Select(part => part.ToLower()); // Приводим к нижнему регистру
+            var studentParts = new[] { student.FirstName, student.LastName, student.MiddleName }
+                .Where(part => !string.IsNullOrWhiteSpace(part)) // Убираем пустые части
+                .Select(part => part.ToLower()) // Приводим к нижнему регистру
+                .ToList();
 
-            // Проверяем, содержатся ли все части запроса в имени студента
-            return queryParts.All(part => nameParts.Contains(part.ToLower()));
+            // Проверяем, совпадают ли все части запроса с соответствующими частями имени
+            return queryParts.All(queryPart => 
+                studentParts.Any(studentPart => studentPart.StartsWith(queryPart.ToLower())));
         }).ToList();
 
 
