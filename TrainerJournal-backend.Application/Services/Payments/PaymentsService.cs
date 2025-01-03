@@ -33,7 +33,7 @@ public class PaymentsService(
                 await request.File.CopyToAsync(stream);
             }
 
-            receipt.Url = $"http://localhost:5001/uploads/{receipt.Id}/{request.File.FileName}";
+            receipt.Url = $"http://85.192.48.165:5001/uploads/{receipt.Id}/{request.File.FileName}";
             
             await db.AddAsync(receipt);
             await db.SaveChangesAsync();
