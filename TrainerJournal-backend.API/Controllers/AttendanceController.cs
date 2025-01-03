@@ -13,15 +13,15 @@ public class AttendanceController(
     AttendanceService attendanceService)
 {
     [HttpGet("practices/{id}")]
-    public async Task<ActionResult<List<AttendanceStudentDTO>>> GeyByPractice(Guid Id)
+    public async Task<ActionResult<List<AttendanceStudentDTO>>> GeyByPractice(Guid id)
     {
-        return await attendanceService.GetByPractice(Id);
+        return await attendanceService.GetByPractice(id);
     }
     
     [HttpGet("groups/{id}")]
-    public async Task<ActionResult<List<AttendanceStudentGroupDTO>>> GetByGroup(Guid Id)
+    public async Task<ActionResult<List<AttendanceStudentGroupDTO>>> GetByGroup(Guid id)
     {
-        return await attendanceService.GetByGroup(Id);
+        return await attendanceService.GetByGroup(id);
     }
     
     [HttpPut]
